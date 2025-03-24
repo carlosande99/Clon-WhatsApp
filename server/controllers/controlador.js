@@ -1,9 +1,20 @@
-import { MovieModel } from "../models/mysql.js";
+import { UserModel } from "../models/mysql.js";
+import bcrypt from 'bcrypt';
+export class UserController {
+    static async create({nombre, email, password}) {
+        // validaciones
 
-export class MovieController {
-    static async getAll(req, res) {
-        const { genre } = req.query
-        const movies = await MovieModel.getAll({ genre })
-        res.json(movies)
+        const hashedPassword = await bcrypt.hash(password, 10); //contraseña encriptada
+        try {
+            const usuario = await UserModel.getUsuario(email);
+            if(usuario.length > 0) {
+                console.log('Usuario ya existe');
+            }else{
+                console.log('Usuario no existe');
+                return await UserModel.postUsuario({nombre, email, hashedPassword});
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 }

@@ -1,35 +1,27 @@
-import express, {json} from 'express'
-import path from 'node:path'
+import express from 'express'
 
 import {Server} from 'socket.io'
 import {createServer} from 'node:http'
+import path from 'node:path'
 
 import {rutas} from './routes/routes.js'
+import setupSocketIO from './routes/socket.js'
 
-const app = express()
-const ServerIO = createServer(app)
-const io = new Server(ServerIO)
+const app = express();
+const ServerIO = createServer(app);
 
-io.on('connection', (socket) => {
-  console.log('new connection')
+const io = new Server(ServerIO, {
+  connectionStateRecovery: {}
+});
+setupSocketIO(io);
 
-  socket.on('disconnect', () => {
-    console.log('user disconnected')
-  })
+app.use(express.static(path.join(process.cwd(), '../client')));
+app.use(express.json());
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg)
-  })
-})
-
-// app.use('/', rutas)
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(process.cwd(), '../client', 'index.html'))
-})
+app.use('/', rutas)
 
 const PORT = process.env.PORT ?? 3000
 
 ServerIO.listen(PORT, () => {
   console.log(`server listening on port http://localhost:${PORT}`)
-})
+});

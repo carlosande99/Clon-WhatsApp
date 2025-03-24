@@ -1,1 +1,8 @@
-GET http://localhost:1234/hola
+post http://localhost:3000/registro
+Content-Type: application/json
+
+{
+  "nombre": "antonio",
+  "email": "antoniofss@gmail.com",
+  "password": "123456"
+}
