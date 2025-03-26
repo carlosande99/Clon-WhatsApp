@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Web Clone</title>
+    <script type="module">
+        import {io} from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js'
+
+        const getUsername = async () => {
+            const username = localStorage.getItem('username')
+            if (username) {
+                return username
+            }
+
+            const res = await fetch('https://random-data-api.com/api/users/random_user')
+            const { username: randomUsername } = await res.json()
+
+            localStorage.setItem('username', randomUsername)
+            return randomUsername
+        }
+
+        const socket = io({
+            auth: {
+                username: await getUsername(),
+                serverOffset: 0
+            }
+        })
+
+        const form = document.getElementById('form')
+        const input = document.getElementById('input')
+        const messages = document.querySelector('.chat-messages')
+
+        socket.on('chat message', (msg, serverOffset, username, senderId) => {
+            if (senderId !== socket.id) {
+                const message = document.createElement('div')
+                message.classList.add('message', 'received')
+                message.textContent = msg
+                messages.appendChild(message)
+                socket.auth.serverOffset = serverOffset
+            }
+        })
+        
+        form.addEventListener('submit', e => {
+            e.preventDefault()
+            if (input.value) {
+                // Crear y mostrar el mensaje enviado localmente
+                const message = document.createElement('div')
+                message.classList.add('message', 'sent')
+                message.textContent = input.value
+                messages.appendChild(message)
+                
+                // Enviamos tanto el mensaje como nuestro ID
+                socket.emit('chat message', input.value)
+                input.value = ''
+            }
+        })
+    </script>
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-sidebar">
+            <!-- Aquí irán los contactos/conversaciones -->
+        </div>
+        <div class="chat-main">
+            <div class="chat-header">
+                <h3>Chat</h3>
+            </div>
+            <div class="chat-messages">
+                <!-- Los mensajes se agregarán aquí dinámicamente -->
+            </div>
+            <div class="chat-input">
+                <form id="form">
+                    <input type="text" class="message-input" placeholder="Escribe un mensaje aquí" id="input">
+                    <button type="submit" id="enviar">Enviar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
