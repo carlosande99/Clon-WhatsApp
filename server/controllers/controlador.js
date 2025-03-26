@@ -1,20 +1,22 @@
-import { UserModel } from "../models/mysql.js";
-import bcrypt from 'bcrypt';
+import { validateUsuario } from "../schemas/usuario.js";
 export class UserController {
-    static async create({nombre, email, password}) {
+    constructor({UserModel}) {
+        this.UserModel = UserModel;
+    }
+    create = async (req, res) => {
         // validaciones
-
-        const hashedPassword = await bcrypt.hash(password, 10); //contraseña encriptada
-        try {
-            const usuario = await UserModel.getUsuario(email);
-            if(usuario.length > 0) {
-                console.log('Usuario ya existe');
-            }else{
-                console.log('Usuario no existe');
-                return await UserModel.postUsuario({nombre, email, hashedPassword});
-            }
-        } catch (error) {
-            console.error(error);
+        const result = validateUsuario(req.body);
+        if (!result.success) {
+            return res.status(400).json({ error: JSON.parse(result.error.message) })
+        }
+        // buscar usuario y crearlo
+        const {email} = req.params;
+        const usuario = await this.UserModel.getUsuario({email});
+        if(usuario.length > 0) {
+            console.log('Usuario ya existe');
+        }else{
+            console.log('Usuario no existe');
+            const newUser = await this.UserModel.postUsuario(result.data);
         }
     }
 }

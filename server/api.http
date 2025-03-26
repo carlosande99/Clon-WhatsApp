@@ -2,7 +2,7 @@ post http://localhost:3000/registro
 Content-Type: application/json
 
 {
-  "nombre": "antonio",
-  "email": "antoniofss@gmail.com",
+  "nombre": "franco",
+  "email": "antoniofssgmail.com",
   "password": "123456"
 }
