@@ -3,6 +3,14 @@ Content-Type: application/json
 
 {
   "nombre": "franco",
-  "email": "antoniofssgmail.com",
+  "email": "francosfafaf@gmail.com",
+  "password": "123456"
+}
+###
+get http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "email": "francosfafaf@gmail.com",
   "password": "123456"
 }

@@ -1,6 +1,5 @@
 import mysql from 'mysql2/promise'
-import bycrypt from 'bcrypt'
-
+import bcrypt from 'bcrypt'
 const config = {
     host: 'localhost',
     user: 'root',
@@ -8,12 +7,11 @@ const config = {
     port: 4000,
     database: 'chat'
 }
-
-
 const connection = mysql.createPool(config)
 
+// modelo de usuario
 export class UserModel {
-    // buscar usuario
+    // buscar usuario por el correo
     static async getUsuario({email}) {
         const [usuario] = await connection.query(
             'SELECT * FROM usuarios where email = ?',
@@ -29,7 +27,8 @@ export class UserModel {
             password
         } = input
 
-        const hashedPassword = await bycrypt.hash(password, 10)
+        // contraseña encriptada
+        const hashedPassword = await bcrypt.hash(password, 10)
 
         const [usuario] = await connection.query(
             'INSERT INTO usuarios (nombre, email, pass) VALUES (?,?,?)',
@@ -38,7 +37,7 @@ export class UserModel {
         return usuario
     }
 }
-
+// guardar mensaje del chat
 export class MessageModel {
     static async postMessage({content, user}) {
         const [message] = await connection.query(
