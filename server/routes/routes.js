@@ -8,7 +8,7 @@ export const createRoutes = ({ UserModel }) => {
     const userController = new UserController({ UserModel })
 
     rutas.get('/', (req, res) => {
-        res.sendFile(path.join(process.cwd(), '../client', 'chat.html'))
+        res.sendFile(path.join(process.cwd(), '../client', 'chat.html')), {email: 'carlos@gmail.com'}
     });
     
     rutas.get('/inicio', (req, res) => {
@@ -19,9 +19,15 @@ export const createRoutes = ({ UserModel }) => {
         res.sendFile(path.join(process.cwd(), '../client', 'registro.html'))
     });
 
+    rutas.get('/login', (req, res) => {
+        res.sendFile(path.join(process.cwd(), '../client', 'login.html'))
+    });
+
     rutas.post('/registro', userController.create);
 
-    rutas.get('/login', userController.login);
+    rutas.post('/login', userController.login);
     
+    // rutas.post('/logout', userController.logout);
+
     return rutas;
 }

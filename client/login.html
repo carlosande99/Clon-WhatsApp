@@ -3,20 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Usuario</title>
+    <title>Iniciar Sesión</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <script type="module" src="./js/registro.js"></script>
+    <script type="module" src="./js/login.js"></script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 class="text-2xl font-bold mb-6 text-center">Registro de Usuario</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
         <form id="form">
-            <div class="mb-4">
-                <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">
-                    Nombre
-                </label>
-                <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="nombre" name="nombre" type="text" placeholder="Nombre">
-            </div>
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
                     Correo Electrónico
@@ -31,11 +25,11 @@
             </div>
             <div class="flex items-center justify-between">
                 <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                    Registrarse
+                    Iniciar Sesión
                 </button>
                 <span>
-                    <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="./login">
-                        Iniciar Sesión
+                    <a class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="./registro">
+                        Registrarse
                     </a>
                 </span>
             </div>

@@ -1,5 +1,6 @@
 import mysql from 'mysql2/promise'
 import bcrypt from 'bcrypt'
+import { SALT_ROUNDS } from '../config.js'
 const config = {
     host: 'localhost',
     user: 'root',
@@ -28,7 +29,7 @@ export class UserModel {
         } = input
 
         // contraseña encriptada
-        const hashedPassword = await bcrypt.hash(password, 10)
+        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
 
         const [usuario] = await connection.query(
             'INSERT INTO usuarios (nombre, email, pass) VALUES (?,?,?)',

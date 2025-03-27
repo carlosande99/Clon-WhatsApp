@@ -4,12 +4,11 @@ form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = new FormData(form);
     const data = {
-        nombre: formData.get('nombre'),
         email: formData.get('email'),
         password: formData.get('password'),
     };
     
-    fetch('/registro', {
+    fetch('/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -18,8 +17,8 @@ form.addEventListener('submit', (e) => {
     })
     .then(res => {
         if(res.ok) {
-            alert('usuario creado');
-            window.location.href = '/';
+            alert('sesion iniciada');
+            // window.location.href = '/';
         } else {
             alert(json.error);
         }

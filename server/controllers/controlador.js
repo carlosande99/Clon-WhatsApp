@@ -1,5 +1,7 @@
 import { validateUsuario, validatePartialUsuario } from "../schemas/usuario.js";
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { SECRET_JWT_KEY } from "../config.js";
 export class UserController {
     constructor({UserModel}) {
         this.UserModel = UserModel;
@@ -36,7 +38,17 @@ export class UserController {
                 return res.status(400).json({ error: 'Contraseña incorrecta' });
             }
             const {pass, id, ...rest} = usuario[0];
-            return res.status(200).json(rest);
+            // secret no es valido para produccion
+            const token = jwt.sign({email: usuario[0].email}, SECRET_JWT_KEY, {expiresIn: '1h'});
+            
+            return res.status(200)
+                .cookie('access_token', token, {
+                    httpOnly: true,
+                    // secure: true,
+                    sameSite: 'none',
+                    maxAge: 1000 * 60 * 60 // 1 hora
+                })
+                .json(rest);
         }
 
         return res.status(400).json({ error: 'Usuario no encontrado' });
