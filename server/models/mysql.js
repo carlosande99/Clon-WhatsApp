@@ -47,4 +47,13 @@ export class MessageModel {
         )
         return message
     }
+
+    static async getMessages({offset}) {
+        const [rows] = await connection.execute(
+            'SELECT id, content, user FROM mensaje WHERE id > ?',
+            [offset]
+        );
+        console.log(rows)
+        return rows
+    }
 }

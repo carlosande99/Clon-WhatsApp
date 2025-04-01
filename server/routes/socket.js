@@ -22,10 +22,7 @@ export default function setupSocketIO(io) {
   
       if (!socket.recovered) {
         try {
-          const [rows] = await connection.execute(
-            'SELECT id, content, user FROM mensaje WHERE id > ?',
-            [socket.handshake.auth.serverOffset ?? 0]
-          );
+          const rows = await MessageModel.getMessages({offset: socket.handshake.auth.serverOffset ?? 0});
           rows.forEach((row) => {
             socket.emit('chat message', row.content, row.id.toString(), row.user);
           });

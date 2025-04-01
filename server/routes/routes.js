@@ -1,6 +1,8 @@
 import { Router } from 'express'
 import path from 'node:path'
 import { UserController } from '../controllers/controlador.js'
+import jwt from 'jsonwebtoken'
+import { SECRET_JWT_KEY } from "../config.js";
 
 export const createRoutes = ({ UserModel }) => {
     const rutas = Router()
@@ -8,7 +10,16 @@ export const createRoutes = ({ UserModel }) => {
     const userController = new UserController({ UserModel })
 
     rutas.get('/', (req, res) => {
-        res.sendFile(path.join(process.cwd(), '../client', 'chat.html')), {email: 'carlos@gmail.com'}
+        const token = req.cookies.access_token
+        if(!token){
+            return res.status(403).send('No autorizado')
+        }
+        try{
+            const data = jwt.verify(token, SECRET_JWT_KEY)
+            res.sendFile(path.join(process.cwd(), '../client', 'chat.html'))
+        }catch(error){
+            return res.status(401).send('No autorizado')
+        }
     });
     
     rutas.get('/inicio', (req, res) => {
@@ -27,7 +38,7 @@ export const createRoutes = ({ UserModel }) => {
 
     rutas.post('/login', userController.login);
     
-    // rutas.post('/logout', userController.logout);
+    rutas.post('/logout', userController.logout);
 
     return rutas;
 }

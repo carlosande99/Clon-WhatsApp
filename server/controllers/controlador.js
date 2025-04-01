@@ -44,8 +44,8 @@ export class UserController {
             return res.status(200)
                 .cookie('access_token', token, {
                     httpOnly: true,
-                    // secure: true,
-                    sameSite: 'none',
+                    secure: true,
+                    sameSite: 'strict',
                     maxAge: 1000 * 60 * 60 // 1 hora
                 })
                 .json(rest);
@@ -53,5 +53,9 @@ export class UserController {
 
         return res.status(400).json({ error: 'Usuario no encontrado' });
 
+    }
+
+    logout = async (req, res) => {
+        res.clearCookie('access_token').sendStatus(200);
     }
 }
