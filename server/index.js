@@ -20,6 +20,8 @@ const io = new Server(ServerIO, {
 setupSocketIO(io);
 
 app.use(express.static(path.join(process.cwd(), '../client')));
+app.set('view engine', 'ejs');
+app.set('views', path.join(process.cwd(), '../client'));
 app.use(express.json());
 app.use(cookieParser());
 

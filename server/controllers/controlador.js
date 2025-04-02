@@ -2,6 +2,7 @@ import { validateUsuario, validatePartialUsuario } from "../schemas/usuario.js";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { SECRET_JWT_KEY } from "../config.js";
+import { borrarCookie, setCookie } from "../utils/cookieUtils.js";
 export class UserController {
     constructor({UserModel}) {
         this.UserModel = UserModel;
@@ -20,8 +21,11 @@ export class UserController {
             return res.status(400).json({ error: 'El usuario ya existe' });
         }
         
-        const newUser = await this.UserModel.postUsuario({ input: result.data });
-        return res.status(201).json(newUser);
+        await this.UserModel.postUsuario({ input: result.data });
+        const {password, nombre, ...rest} = result.data;
+        const token = jwt.sign({email: result.data.email}, SECRET_JWT_KEY, {expiresIn: '1h'});
+
+        return setCookie(res, token).json(rest);
     }
 
     login = async (req, res) => {
@@ -37,18 +41,11 @@ export class UserController {
             if(!isValid){
                 return res.status(400).json({ error: 'Contraseña incorrecta' });
             }
+
             const {pass, id, ...rest} = usuario[0];
-            // secret no es valido para produccion
             const token = jwt.sign({email: usuario[0].email}, SECRET_JWT_KEY, {expiresIn: '1h'});
-            
-            return res.status(200)
-                .cookie('access_token', token, {
-                    httpOnly: true,
-                    secure: true,
-                    sameSite: 'strict',
-                    maxAge: 1000 * 60 * 60 // 1 hora
-                })
-                .json(rest);
+
+            return setCookie(res, token).json(rest);
         }
 
         return res.status(400).json({ error: 'Usuario no encontrado' });
@@ -56,6 +53,6 @@ export class UserController {
     }
 
     logout = async (req, res) => {
-        res.clearCookie('access_token').sendStatus(200);
+        borrarCookie(res, 'access_token');
     }
 }

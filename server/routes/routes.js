@@ -3,6 +3,7 @@ import path from 'node:path'
 import { UserController } from '../controllers/controlador.js'
 import jwt from 'jsonwebtoken'
 import { SECRET_JWT_KEY } from "../config.js";
+import { buscarCookie } from '../utils/cookieUtils.js';
 
 export const createRoutes = ({ UserModel }) => {
     const rutas = Router()
@@ -10,28 +11,28 @@ export const createRoutes = ({ UserModel }) => {
     const userController = new UserController({ UserModel })
 
     rutas.get('/', (req, res) => {
-        const token = req.cookies.access_token
+        const token = buscarCookie(req, 'access_token');
         if(!token){
-            return res.status(403).send('No autorizado')
+            return res.render('login')
         }
         try{
             const data = jwt.verify(token, SECRET_JWT_KEY)
-            res.sendFile(path.join(process.cwd(), '../client', 'chat.html'))
+            res.render('chat', {email: data.email})
         }catch(error){
             return res.status(401).send('No autorizado')
         }
     });
     
     rutas.get('/inicio', (req, res) => {
-        res.sendFile(path.join(process.cwd(), '../client', 'inicio.html'))
+        res.render('inicio')
     });
 
     rutas.get('/registro', (req, res) => {
-        res.sendFile(path.join(process.cwd(), '../client', 'registro.html'))
+        res.render('registro')
     });
 
     rutas.get('/login', (req, res) => {
-        res.sendFile(path.join(process.cwd(), '../client', 'login.html'))
+        res.render('login')
     });
 
     rutas.post('/registro', userController.create);
