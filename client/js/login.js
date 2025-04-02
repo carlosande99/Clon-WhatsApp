@@ -18,7 +18,7 @@ form.addEventListener('submit', (e) => {
     .then(res => {
         if(res.ok) {
             alert('sesion iniciada');
-            // window.location.href = '/';
+            window.location.href = '/';
         } else {
             alert(json.error);
         }
