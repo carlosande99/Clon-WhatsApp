@@ -65,6 +65,7 @@ export class UserController {
         }
 
         await this.UserModel.addFriend({email: email, amigo: amigo, nombre: nombre});
+        await this.UserModel.addList({email: email, amigo: amigo});
         return res.status(200).json({ message: 'Amigo agregado' });
     }
 }

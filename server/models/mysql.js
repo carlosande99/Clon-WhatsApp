@@ -46,6 +46,27 @@ export class UserModel {
         )
         return usuario
     }
+    // creacion de lista de amigos
+    static async addList({email, amigo}) {
+        await connection.query(
+            'INSERT INTO chat_list (usuario_id, amigo_id) VALUES (?,?)',
+            [email, amigo]
+        )
+
+        await connection.query(
+            'INSERT INTO chat_list (usuario_id, amigo_id) VALUES (?,?)',
+            [amigo, email]
+        )
+        return
+    }
+    // devolver lista de amigos
+    static async getList({email}) {
+        const [rows] = await connection.query(
+            'SELECT amigo_id FROM chat_list WHERE usuario_id = ?',
+            [email]
+        )
+        return rows
+    }
 }
 // guardar mensaje del chat
 export class MessageModel {
