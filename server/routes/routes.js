@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import path from 'node:path'
 import { UserController } from '../controllers/controlador.js'
 import jwt from 'jsonwebtoken'
 import { SECRET_JWT_KEY } from "../config.js";
@@ -13,31 +12,29 @@ export const createRoutes = ({ UserModel }) => {
     rutas.get('/', (req, res) => {
         const token = buscarCookie(req, 'access_token');
         if(!token){
-            return res.render('login')
+            return res.render('usuario/login')
         }
         try{
             const data = jwt.verify(token, SECRET_JWT_KEY)
-            res.render('chat', {email: data.email})
+            res.render('chat/chat', {email: data.email})
         }catch(error){
             return res.status(401).send('No autorizado')
         }
     });
-    
-    rutas.get('/inicio', (req, res) => {
-        res.render('inicio')
-    });
 
     rutas.get('/registro', (req, res) => {
-        res.render('registro')
+        res.render('usuario/registro')
     });
 
     rutas.get('/login', (req, res) => {
-        res.render('login')
+        res.render('usuario/login')
     });
 
     rutas.post('/registro', userController.create);
 
     rutas.post('/login', userController.login);
+
+    rutas.post('/amigo', userController.addFriend);
     
     rutas.post('/logout', userController.logout);
 

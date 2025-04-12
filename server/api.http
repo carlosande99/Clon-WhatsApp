@@ -2,8 +2,17 @@ post http://localhost:3000/registro
 Content-Type: application/json
 
 {
-  "nombre": "franco",
-  "email": "francosfafaf@gmail.com",
+  "nombre": "carlos",
+  "email": "carlos@gmail.com",
+  "password": "123456"
+}
+###
+post http://localhost:3000/registro
+Content-Type: application/json
+
+{
+  "nombre": "sergio",
+  "email": "sergio@gmail.com",
   "password": "123456"
 }
 ###
@@ -17,3 +26,13 @@ Content-Type: application/json
 
 ###
 post http://localhost:3000/logout
+
+###
+post http://localhost:3000/amigo
+Content-Type: application/json
+
+{
+  "email": "carlos@gmail.com",
+  "amigo": "sergio@gmail.com",
+  "nombre": "sergio"
+}

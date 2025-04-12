@@ -55,4 +55,16 @@ export class UserController {
     logout = async (req, res) => {
         borrarCookie(res, 'access_token');
     }
+
+    addFriend = async (req, res) => {
+        const {email, amigo, nombre} = req.body;
+        const usuario = await this.UserModel.getUsuario({email: amigo});
+
+        if(usuario.length === 0) {
+            return res.status(400).json({ error: 'Usuario no encontrado' });
+        }
+
+        await this.UserModel.addFriend({email: email, amigo: amigo, nombre: nombre});
+        return res.status(200).json({ message: 'Amigo agregado' });
+    }
 }

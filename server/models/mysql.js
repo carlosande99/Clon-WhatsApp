@@ -37,6 +37,15 @@ export class UserModel {
         )
         return usuario
     }
+
+    // guardar amigo
+    static async addFriend({email, amigo, nombre}) {
+        const [usuario] = await connection.query(
+            'INSERT INTO amigos (usuario_id, amigo_id, nombre) VALUES (?,?,?)',
+            [email, amigo, nombre]
+        )
+        return usuario
+    }
 }
 // guardar mensaje del chat
 export class MessageModel {
