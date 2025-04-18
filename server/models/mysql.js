@@ -46,7 +46,7 @@ export class UserModel {
         )
         return usuario
     }
-    // creacion de lista de amigos
+    // creacion de lista del chat para los dos
     static async addList({email, amigo}) {
         await connection.query(
             'INSERT INTO chat_list (usuario_id, amigo_id) VALUES (?,?)',
@@ -60,9 +60,17 @@ export class UserModel {
         return
     }
     // devolver lista de amigos
-    static async getList({email}) {
+    static async getFriend({email}) {
         const [rows] = await connection.query(
-            'SELECT amigo_id FROM chat_list WHERE usuario_id = ?',
+            'SELECT * FROM amigos WHERE usuario_id = ?',
+            [email]
+        )
+        return rows
+    }
+
+    static async getChats({email}) {
+        const [rows] = await connection.query(
+            'SELECT * FROM chat_list WHERE usuario_id = ?',
             [email]
         )
         return rows
@@ -83,7 +91,6 @@ export class MessageModel {
             'SELECT id, content, user FROM mensaje WHERE id > ?',
             [offset]
         );
-        console.log(rows)
         return rows
     }
 }

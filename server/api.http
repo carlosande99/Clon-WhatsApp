@@ -16,6 +16,15 @@ Content-Type: application/json
   "password": "123456"
 }
 ###
+post http://localhost:3000/registro
+Content-Type: application/json
+
+{
+  "nombre": "pablo",
+  "email": "pablo@gmail.com",
+  "password": "123456"
+}
+###
 get http://localhost:3000/login
 Content-Type: application/json
 
@@ -33,6 +42,14 @@ Content-Type: application/json
 
 {
   "email": "carlos@gmail.com",
-  "amigo": "sergio@gmail.com",
-  "nombre": "sergio"
+  "amigo": "pablo@gmail.com",
+  "nombre": "pablo"
+}
+
+###
+get http://localhost:3000/amigo
+Content-Type: application/json
+
+{
+  "email": "carlos@gmail.com"
 }

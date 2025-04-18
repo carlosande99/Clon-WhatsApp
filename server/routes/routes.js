@@ -34,8 +34,15 @@ export const createRoutes = ({ UserModel }) => {
 
     rutas.post('/login', userController.login);
 
+    // agregar amigo
     rutas.post('/amigo', userController.addFriend);
+
+    // sacar amigos
+    rutas.get('/amigo', userController.getFriend);
+
+    rutas.get('/chats', userController.getChats);
     
+    // cerrar sesion
     rutas.post('/logout', userController.logout);
 
     return rutas;
