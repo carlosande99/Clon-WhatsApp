@@ -1,0 +1,51 @@
+<span id="chats" class="chat-item flex justify-between bg-gray-500">
+
+</span>
+
+<!-- <script type="module">
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/chats', {
+            method: 'GET',
+        })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Error en la red');
+            }
+            return res.json();
+        })
+        .then(data => {
+            console.log(data);
+            const chatList = document.getElementById('chats');
+            chatList.innerHTML = '';
+            for(let i = 0; i < data.length; i++) {
+                const chat = data[i];
+                // ----
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'chat-imagen bg-black rounded-full p-6';
+                chatList.appendChild(imageDiv);
+                // ----
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'chat-info flex flex-col justify-center';
+                const chatName = document.createElement('h2');
+                chatName.innerHTML = chat.amigo_id;
+                const ultimoMessage = document.createElement('p');
+                ultimoMessage.innerHTML = chat.last_message;
+                infoDiv.appendChild(chatName);
+                infoDiv.appendChild(ultimoMessage);
+                chatList.appendChild(infoDiv);
+                // ----
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'chat-time flex justify-center';
+                const chatTime = document.createElement('p');
+                chatTime.innerHTML = '12:00';
+                timeDiv.appendChild(chatTime);
+                chatList.appendChild(timeDiv);
+                // ----
+
+            }
+        })
+        .catch(error => {
+            console.error('Hubo un problema con la solicitud Fetch:', error);
+        });
+    }) 
+</script> -->

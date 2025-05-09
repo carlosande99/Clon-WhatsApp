@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Web Clone</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script>
+        const userEmail = '<%= email %>';
+    </script>
+    <script type="module" src="./js/socket.js"></script>
+    <script type="module" src="./js/logout.js"></script>
+    <script type="module" src="./js/newChat.js"></script>
+    <link rel="stylesheet" href="./css/chat.css">
+    <style type="text/tailwindcss">
+        @theme {
+            --color-whatsappDark: #121212;   /* Fondo oscuro para el modo oscuro */
+            --color-whatsappLight: #25D366;  /* Verde principal */
+            --color-whatsapp: #25D366;       /* Verde principal */
+            --color-whatsappGray: #E5E5E5;   /* Gris claro (modo claro) */
+            --color-whatsappGrayDark: #4C4C4C; /* Gris oscuro (modo claro) */
+            --color-whatsappBubbleSent: #DCF8C6; /* Burbujas enviadas (modo claro) */
+            --color-whatsappBubbleReceived: #E5E5E5; /* Burbujas recibidas (modo claro) */
+            --color-whatsappBubbleSentDark: #075E54; /* Burbujas enviadas (modo oscuro) */
+            --color-whatsappBubbleReceivedDark: #333333; /* Burbujas recibidas (modo oscuro) */
+            --color-whatsappTextLight: #000000; /* Texto principal (modo claro) */
+            --color-whatsappTextDark: #E1E1E1;  /* Texto principal (modo oscuro) */
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- grande -->
+    <div class="flex max-h-screen flex-col">
+        <div class="flex bg-whatsappDark h-[5vh]">
+            <img src="./assets/whatsapp.svg" class="w-6 ml-3 me-3"/>
+            <h1 class="text-sm text-whatsappTextDark content-center">WhatsApp Web Clone</h1>
+        </div>
+        <div class="flex bg-whatsappDark h-[95vh]">
+            <!-- primera -->
+            <div class="bg-whatsappDark flex flex-col w-12">
+                <button class="content-center p-2 flex justify-center">
+                    <svg width="20" height="20" class="text-white">
+                        <use xlink:href="./assets/sprite.svg#menu"/>
+                    </svg>
+                </button>
+                
+                <button class="content-center p-2 flex justify-center">
+                    <svg width="20" height="20" class="text-white">
+                        <use xlink:href="./assets/sprite.svg#chat"/>
+                    </svg>
+                </button>
+
+                <button class="content-center p-2 flex justify-center">
+                    <svg width="20" height="20" class="text-white">
+                        <use xlink:href="./assets/sprite.svg#telephone"/>
+                    </svg>
+                </button>
+
+                <button class="content-center p-2 flex justify-center">
+                    <svg width="20" height="20" class="text-white">
+                        <use xlink:href="./assets/sprite.svg#star"/>
+                    </svg>
+                </button>
+
+                <button class="content-center p-2 flex justify-center">
+                    <svg width="20" height="20" class="text-white">
+                        <use xlink:href="./assets/sprite.svg#settings"/>
+                    </svg>
+                </button>
+            </div>
+            <!-- segunda -->
+            <div class="flex w-full">
+                <!-- peque 1 -->
+                <div class="flex flex-col bg-whatsappBubbleReceivedDark w-1/4 rounded-tl-lg border border-black/20">
+                    <div class="flex justify-center items-center gap-2 p-2 mt-1 mb-1">
+                        <div id="titulo" class="w-4/6">
+                            <h1 class="text-xl text-white">Chats</h1>
+                        </div>
+                        <div id="newChatFilter" class="w-1/6 flex justify-between">
+                            <%- include('./components/button', {
+                                label: `
+                                  <svg width="20" height="20" class="text-white inline-block">
+                                    <use href="./assets/sprite.svg#newChat" />
+                                  </svg>
+                                `
+                              }) %>                              
+                              
+                            <!-- <button type="button" class="">
+                                <svg width="20" height="20" class="text-white">
+                                    <use href="./assets/sprite.svg#newChat" />
+                                </svg>
+
+                            </button> -->
+                            <button type="button" class="">
+                                <svg width="20" height="20" class="text-white">
+                                    <use href="./assets/sprite.svg#filtrar" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-center items-center gap-2">
+                        <input type="text" name="buscar" id="buscar" 
+                            class="focus:outline-none focus:border-transparent text-white w-5/6 rounded-md bg-whatsappGrayDark
+                            border border-t-whatsappBubbleReceivedDark border-e-whatsappBubbleReceivedDark border-l-whatsappBubbleReceivedDark border-b-whatsappGray
+                            focus:bg-whatsappDark focus:border-b-whatsappLight
+                            p-2" 
+                            placeholder="Buscar un chat o iniciar uno nuevo" 
+                        />
+                    </div>
+                    <div>
+                        <!-- aqui se crearian los div  de los chats-->
+                        <%- include('chatList') %>
+                    </div>
+                    <div class="mt-auto">
+                        <button id="cerrarSesion" type="button" class="bg-red-500 rounded-md hover:bg-indigo-500 ">Cerrar sesión</button>
+                    </div>
+                </div>
+                <!-- peque 2 -->
+                <div class="flex w-3/4 flex-col">
+                    <div class="w-full bg-whatsappBubbleReceivedDark border-t border-b border-black/20 p-4">
+                        <h2 class="text-xl">Nombre del chat</h2>
+                    </div>
+                    <div class="flex-1 overflow-y-auto space-y-2 flex flex-col-reverse bg-[url(/img/fondo.webp)]">
+                        <div class="chat-messages flex flex-col space-y-2">
+                            
+                        </div>
+                    </div>
+                    <div class="w-full bg-whatsappBubbleReceivedDark p-3">
+                        <form id="form" class="flex gap-3">
+                            <button>
+                                <svg width="20" height="20" class="text-white">
+                                    <use href="./assets/sprite.svg#smile" />
+                                </svg>
+                            </button>
+                            <button>
+                                <svg width="20" height="20" class="text-white transform rotate-[270deg] scale-x-[-1]">
+                                    <use href="./assets/sprite.svg#attach" />
+                                </svg>
+                            </button>
+                            <input type="text" class="w-full focus:outline-none focus:border-transparent text-white" placeholder="Escribe un mensaje" id="input">
+                            <button>
+                                <svg width="20" height="20" class="text-white">
+                                    <use href="./assets/sprite.svg#microphone" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

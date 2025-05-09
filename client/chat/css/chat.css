@@ -1,0 +1,26 @@
+.message {
+    max-width: 65%;
+    padding: 8px 12px;
+    border-radius: 7.5px;
+    position: relative;
+    min-width: 20%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    overflow-x: auto;
+}
+
+.message.received {
+    background-color: #ffffff;
+    align-self: flex-start;
+    margin-right: auto;
+    max-width: 65%;
+}
+
+.message.sent {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    margin-left: auto;
+    max-width: 65%;
+}
+  
