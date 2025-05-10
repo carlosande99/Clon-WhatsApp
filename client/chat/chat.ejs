@@ -38,65 +38,66 @@
         </div>
         <div class="flex bg-whatsappDark h-[95vh]">
             <!-- primera -->
-            <div class="bg-whatsappDark flex flex-col w-12">
-                <button class="content-center p-2 flex justify-center">
-                    <svg width="20" height="20" class="text-white">
-                        <use xlink:href="./assets/sprite.svg#menu"/>
-                    </svg>
-                </button>
-                
-                <button class="content-center p-2 flex justify-center">
-                    <svg width="20" height="20" class="text-white">
-                        <use xlink:href="./assets/sprite.svg#chat"/>
-                    </svg>
-                </button>
+            <div class="bg-whatsappDark flex flex-col w-12 me-1 ml-1 justify-between">
+                <div>
+                    <%- include('./components/button', {
+                        isSvg: true,
+                        icon: 'menu',
+                        extraClass: 'content-center p-2 flex justify-center',
+                        group: false
+                        
+                    }) %>
+                    <div role="group">
+                        <%- include('./options', {
+                            names: ['chat', 'telephone', 'status'],
+                            extraClass: 'content-center p-2 flex justify-center',
+                            group: true
+                        }) %>
+                    </div>
 
-                <button class="content-center p-2 flex justify-center">
-                    <svg width="20" height="20" class="text-white">
-                        <use xlink:href="./assets/sprite.svg#telephone"/>
-                    </svg>
-                </button>
-
-                <button class="content-center p-2 flex justify-center">
-                    <svg width="20" height="20" class="text-white">
-                        <use xlink:href="./assets/sprite.svg#star"/>
-                    </svg>
-                </button>
-
-                <button class="content-center p-2 flex justify-center">
-                    <svg width="20" height="20" class="text-white">
-                        <use xlink:href="./assets/sprite.svg#settings"/>
-                    </svg>
-                </button>
+                </div>
+                <div>
+                    <div role="group">
+                        <%- include('./options', {
+                            names: ['star', 'box'],
+                            extraClass: 'content-center p-2 flex justify-center',
+                            group: true
+                        }) %>
+                    </div>
+                    <%- include('./options', {
+                        names: ['line', 'settings'],
+                        extraClass: 'content-center p-2 flex justify-center',
+                        group: false
+                    }) %>
+                    <%- include('./components/button', {
+                        isSvg: false,
+                        icon: false,
+                        extraClass: 'content-center p-2 flex justify-center rounded-full bg-black w-[46px] h-[46px]',
+                        group: false
+                    }) %>
+                </div> 
             </div>
             <!-- segunda -->
             <div class="flex w-full">
                 <!-- peque 1 -->
                 <div class="flex flex-col bg-whatsappBubbleReceivedDark w-1/4 rounded-tl-lg border border-black/20">
-                    <div class="flex justify-center items-center gap-2 p-2 mt-1 mb-1">
-                        <div id="titulo" class="w-4/6">
+                    <div class="flex justify-center items-center gap-2 p-2 mt-1 mb-1 w-full">
+                        <div id="titulo" class="w-3/6">
                             <h1 class="text-xl text-white">Chats</h1>
                         </div>
-                        <div id="newChatFilter" class="w-1/6 flex justify-between">
+                        <div id="newChatFilter" class="w-2/6 flex justify-center">
                             <%- include('./components/button', {
-                                label: `
-                                  <svg width="20" height="20" class="text-white inline-block">
-                                    <use href="./assets/sprite.svg#newChat" />
-                                  </svg>
-                                `
-                              }) %>                              
-                              
-                            <!-- <button type="button" class="">
-                                <svg width="20" height="20" class="text-white">
-                                    <use href="./assets/sprite.svg#newChat" />
-                                </svg>
-
-                            </button> -->
-                            <button type="button" class="">
-                                <svg width="20" height="20" class="text-white">
-                                    <use href="./assets/sprite.svg#filtrar" />
-                                </svg>
-                            </button>
+                                isSvg: true,
+                                icon: 'newChat',
+                                extraClass: 'content-center p-2 flex justify-center',
+                                group: false
+                            }) %>                              
+                            <%- include('./components/button', {
+                                isSvg: true,
+                                icon: 'filtrar',
+                                extraClass: 'content-center p-2 flex justify-center',
+                                group: false
+                            }) %>    
                         </div>
                     </div>
                     <div class="flex justify-center items-center gap-2">
@@ -118,32 +119,64 @@
                 </div>
                 <!-- peque 2 -->
                 <div class="flex w-3/4 flex-col">
-                    <div class="w-full bg-whatsappBubbleReceivedDark border-t border-b border-black/20 p-4">
-                        <h2 class="text-xl">Nombre del chat</h2>
+                    <div class="w-full bg-whatsappBubbleReceivedDark border-t border-b border-black/20 p-4 flex justify-between">
+                        <div>
+                            <h2 class="text-xl text-white">Nombre del chat</h2>
+                        </div>
+                        <div class="flex">
+                            <div class="flex m-0">
+                                <%- include('./components/button', {
+                                    isSvg: true,
+                                    icon: 'video',
+                                    extraClass: 'content-center p-2 flex justify-center bg-whatsappGrayDark/30 rounded-none rounded-l-md border-r border-r-white/5',
+                                    group: false                               
+                                }) %>
+                                <%- include('./components/button', {
+                                    isSvg: true,
+                                    icon: 'telephone',
+                                    extraClass: 'content-center p-2 flex justify-center bg-whatsappGrayDark/30 rounded-none rounded-r-md border-l border-l-white/5',
+                                    group: false                               
+                                }) %>
+                            </div>
+                            <%- include('./components/button', {
+                                isSvg: true,
+                                icon: 'search',
+                                extraClass: 'content-center p-2 flex justify-center scale-x-[-1] ml-1',
+                                group: false                               
+                            }) %>
+                        </div>
+
                     </div>
                     <div class="flex-1 overflow-y-auto space-y-2 flex flex-col-reverse bg-[url(/img/fondo.webp)]">
                         <div class="chat-messages flex flex-col space-y-2">
                             
                         </div>
                     </div>
-                    <div class="w-full bg-whatsappBubbleReceivedDark p-3">
+                    <div class="w-full bg-whatsappBubbleReceivedDark p-3 ">
                         <form id="form" class="flex gap-3">
-                            <button>
-                                <svg width="20" height="20" class="text-white">
-                                    <use href="./assets/sprite.svg#smile" />
-                                </svg>
-                            </button>
-                            <button>
-                                <svg width="20" height="20" class="text-white transform rotate-[270deg] scale-x-[-1]">
-                                    <use href="./assets/sprite.svg#attach" />
-                                </svg>
-                            </button>
-                            <input type="text" class="w-full focus:outline-none focus:border-transparent text-white" placeholder="Escribe un mensaje" id="input">
-                            <button>
-                                <svg width="20" height="20" class="text-white">
-                                    <use href="./assets/sprite.svg#microphone" />
-                                </svg>
-                            </button>
+                            <%- include('./components/button', {
+                                isSvg: true,
+                                icon: 'smile',
+                                extraClass: 'content-center p-2 flex justify-center',
+                                group: false
+                                
+                            }) %>  
+                            <%- include('./components/button', {
+                                isSvg: true,
+                                icon: 'attach',
+                                extraClass: 'content-center p-2 flex justify-center',
+                                group: false
+                            }) %> 
+                            <div class="flex items-center w-full">
+                                <textarea type="text" rows="1" class="w-full focus:outline-none focus:border-transparent text-white resize-none" placeholder="Escribe un mensaje" id="input"></textarea>
+                            </div>
+
+                            <%- include('./components/button', {
+                                isSvg: true,
+                                icon: 'microphone',
+                                extraClass: 'content-center p-2 flex justify-center',
+                                group: false
+                            }) %> 
                         </form>
                     </div>
                 </div>

@@ -1,4 +1,24 @@
-<button type="button" class="btn hover:bg-whatsappGray <%= typeof extraClass !== 'undefined' ? extraClass : '' %>">
-    <%- label %>
+<button type="button" class="btn flex items-center mb-1 mt-1 rounded-md <%= icon === 'line' ? '' : 'hover:bg-whatsappGrayDark/70' %> <%= extraClass || '' %>" 
+    <% if(group === true) {%>
+        <%if(pressed === true){%>
+            aria-pressed="true"
+        <%} else {%>
+            aria-pressed="false"
+        <%}%>
+    <%}%>
+    >
+    <% if (isSvg && icon) { %>
+      <svg 
+        <%
+          let baseClass = 'text-white';
+          let sizeClass = icon === 'line' ? 'w-full h-[30px] text-white/40' : 'w-[30px] h-[30px] p-[5px] text-white';
+        %>
+      
+        class="<%= sizeClass %>"
+      >
+        <use href="./assets/sprite.svg#<%= icon %>" />
+      </svg>
+    <% } %>
 </button>
+  
   

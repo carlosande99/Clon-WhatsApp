@@ -1,0 +1,11 @@
+<% names.forEach((name, index) => { %>
+    <%- include('./components/button', {
+      isSvg: true,
+      icon: name,
+      extraClass: extraClass,
+      group: group,
+      pressed: name === 'chat' ? true : false
+    }) %>
+<% }) %>
+  
+
