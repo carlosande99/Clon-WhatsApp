@@ -1,0 +1,61 @@
+<form id="form" class="flex gap-3 mt-1">
+    <%- include('./button', {
+        isSvg: true,
+        icon: 'smile',
+        extraClass: 'p-2 flex justify-center max-h-[46px] m-1 me-0 mt-auto',
+        group: false
+        
+    }) %>  
+    <%- include('./button', {
+        isSvg: true,
+        icon: 'attach',
+        extraClass: 'p-2 flex justify-center max-h-[46px] m-1 ml-0 mt-auto',
+        group: false
+    }) %> 
+    <div class="flex items-center w-full">
+        <textarea type="text" rows="1" class="w-full focus:outline-none focus:border-transparent text-white resize-none overflow-hidden max-h-[100px] " placeholder="Escribe un mensaje" id="input"></textarea>
+    </div>
+
+    <%- include('./button', {
+        isSvg: true,
+        icon: 'microphone',
+        extraClass: 'p-2 flex justify-end max-h-[46px] mt-auto m-1',
+        group: false
+    }) %> 
+</form>
+
+<script type="module">
+    const textarea = document.getElementById('input');
+    
+    textarea.addEventListener('input', () => {
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
+        if(textarea.value.trim() !== ''){
+            const img = document.getElementById('microphone');
+            if(img !== null){
+                img.setAttribute('href', './assets/sprite.svg#enviar');
+                img.setAttribute('id', 'enviar');
+                img.parentElement.parentElement.setAttribute('type', 'submit');
+            }
+        }else{
+            const img = document.getElementById('enviar');
+            if(img !== null){
+                img.setAttribute('href', './assets/sprite.svg#microphone');
+                img.setAttribute('id', 'microphone');
+                img.parentElement.parentElement.setAttribute('type', 'button');
+            }         
+        }
+    });
+</script>
+
+<script type="module">
+    const form = document.getElementById('form');
+    const input = document.getElementById('input');
+    input.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            const enviar = document.getElementById('enviar');
+            form.dispatchEvent(new Event('submit', { cancelable: true }));
+        }
+    });
+</script>

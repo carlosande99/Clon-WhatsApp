@@ -149,35 +149,11 @@
                     </div>
                     <div class="flex-1 overflow-y-auto space-y-2 flex flex-col-reverse bg-[url(/img/fondo.webp)]">
                         <div class="chat-messages flex flex-col space-y-2">
-                            
+                            <!-- aqui se añaden los mensajes -->
                         </div>
                     </div>
-                    <div class="w-full bg-whatsappBubbleReceivedDark p-3 ">
-                        <form id="form" class="flex gap-3">
-                            <%- include('./components/button', {
-                                isSvg: true,
-                                icon: 'smile',
-                                extraClass: 'content-center p-2 flex justify-center',
-                                group: false
-                                
-                            }) %>  
-                            <%- include('./components/button', {
-                                isSvg: true,
-                                icon: 'attach',
-                                extraClass: 'content-center p-2 flex justify-center',
-                                group: false
-                            }) %> 
-                            <div class="flex items-center w-full">
-                                <textarea type="text" rows="1" class="w-full focus:outline-none focus:border-transparent text-white resize-none" placeholder="Escribe un mensaje" id="input"></textarea>
-                            </div>
-
-                            <%- include('./components/button', {
-                                isSvg: true,
-                                icon: 'microphone',
-                                extraClass: 'content-center p-2 flex justify-center',
-                                group: false
-                            }) %> 
-                        </form>
+                    <div class="w-full bg-whatsappBubbleReceivedDark">
+                        <%- include('./components/teclado') %>
                     </div>
                 </div>
             </div>
