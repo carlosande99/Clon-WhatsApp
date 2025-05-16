@@ -1,7 +1,7 @@
 
 const newChat =  document.getElementById('newChat');
 
-// traer datos cuando se hace click y mandar datos cuando se guarde un nuevo chat
+// trae todos los chats del usuario
 newChat.addEventListener('click', () => {
     fetch('/amigo', {
         method: 'GET',
@@ -13,20 +13,20 @@ newChat.addEventListener('click', () => {
         return res.json();
     })
     .then(data => {
-        // añadir colores
-        const chatDataElement = document.getElementById('newChat');
-        const amigos = document.querySelectorAll('.amigo');
-        amigos.forEach(amigo => {
-            amigo.remove();
+        console.log(data)
+        const contactos = document.getElementById('contactos');
+        const usuarios = document.querySelectorAll('.contactos');
+        usuarios.forEach(usuario => {
+            usuario.remove();
         });
-        for(let i = 0; i < data.length; i++){
-            const amigo = document.createElement('option');
-            amigo.classList.add('amigo');
-            amigo.value = data[i].nombre;
-            amigo.innerText = data[i].nombre;
-            chatDataElement.appendChild(amigo);
-        }
-        
+        data.forEach(element => {
+            const button = document.createElement('button');
+            button.setAttribute('type', 'button')
+            button.classList.add('btn', 'flex', 'items-center', 'mb-1', 'mt-1', 'rounded-md', 'hover:bg-whatsappGrayDark/70', 'w-full', 'p-2', 'w-full', 'contactos');
+            button.setAttribute('data-email', element.nombre)
+            button.innerText = element.nombre;
+            contactos.appendChild(button);
+        });
     })
     .catch(error => {
         console.error('Hubo un problema con la solicitud Fetch:', error);

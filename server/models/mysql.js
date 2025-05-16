@@ -38,7 +38,7 @@ export class UserModel {
         return usuario
     }
 
-    // guardar amigo
+    // guardar amigo yes
     static async addFriend({email, amigo, nombre}) {
         const [usuario] = await connection.query(
             'INSERT INTO amigos (usuario_id, amigo_id, nombre) VALUES (?,?,?)',
@@ -46,7 +46,17 @@ export class UserModel {
         )
         return usuario
     }
-    // creacion de lista del chat para los dos
+
+    // devolver lista de amigos
+    static async getFriend({id}) {
+        const [rows] = await connection.query(
+            'SELECT * FROM amigos WHERE usuario_id = ?',
+            [id]
+        )
+        return rows
+    }
+
+    // creacion de lista del chat para los dos yes
     static async addList({email, amigo}) {
         await connection.query(
             'INSERT INTO chat_list (usuario_id, amigo_id) VALUES (?,?)',
@@ -59,29 +69,29 @@ export class UserModel {
         )
         return
     }
-    // devolver lista de amigos
-    static async getFriend({email}) {
-        const [rows] = await connection.query(
-            'SELECT * FROM amigos WHERE usuario_id = ?',
-            [email]
-        )
-        return rows
-    }
-
-    static async getChats({email}) {
+    // devolver lista de chats
+    static async getChats({id}) {
         const [rows] = await connection.query(
             'SELECT * FROM chat_list WHERE usuario_id = ?',
-            [email]
+            [id]
         )
         return rows
     }
+    // buscar usuario por id y devolver su email
+    static async getUsuarioId({id}) {
+        const [usuario] = await connection.query(
+            'SELECT email FROM usuarios where id = ?',
+            [id]
+        )
+        return usuario
+    }
 }
-// guardar mensaje del chat
+// modelo del socket
 export class MessageModel {
-    static async postMessage({content, user}) {
+    static async postMessage({content, id, friendId}) {
         const [message] = await connection.query(
-            'INSERT INTO mensaje (content, user) VALUES (?,?)',
-            [content, user]
+            'INSERT INTO mensaje (content, usuario_id, amigo_id) VALUES (?,?,?)',
+            [content, id, friendId]
         )
         return message
     }
@@ -93,4 +103,21 @@ export class MessageModel {
         );
         return rows
     }
+
+    static async getMyId ({email}) {
+        const [rows] = await connection.query(
+            'SELECT id FROM usuarios WHERE email = ?',
+            [email]
+        )
+        return rows
+    }
+
+    static async getFriendId ({id, amigoName}) {
+        const [rows] = await connection.query(
+            'SELECT amigo_id FROM amigos WHERE usuario_id = ? AND nombre = ?',
+            [id, amigoName]
+        )
+        return rows
+    }
+
 }

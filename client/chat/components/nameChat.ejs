@@ -1,0 +1,25 @@
+<div>
+    <h2 class="text-xl text-white" id="tituloChat"></h2>
+</div>
+<div class="flex">
+    <div class="flex m-0">
+        <%- include('./button', {
+            isSvg: true,
+            icon: 'video',
+            extraClass: 'content-center p-2 flex justify-center bg-whatsappGrayDark/30 rounded-none rounded-l-md border-r border-r-white/5',
+            group: false                               
+        }) %>
+        <%- include('./button', {
+            isSvg: true,
+            icon: 'telephone',
+            extraClass: 'content-center p-2 flex justify-center bg-whatsappGrayDark/30 rounded-none rounded-r-md border-l border-l-white/5',
+            group: false                               
+        }) %>
+    </div>
+    <%- include('./button', {
+        isSvg: true,
+        icon: 'search',
+        extraClass: 'content-center p-2 flex justify-center scale-x-[-1] ml-1',
+        group: false                               
+    }) %>
+</div>

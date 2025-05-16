@@ -7,6 +7,26 @@ export class UserController {
     constructor({UserModel}) {
         this.UserModel = UserModel;
     }
+
+    // render de la pagina
+    pageChat = async (req, res) => {
+        const token = buscarCookie(req, 'access_token');
+        if(!token){
+            return res.render('usuario/login')
+        }
+        try{
+            // cosas que tengo que devolver -> mis datos como el gmail y nombre como de mis amigos
+            const data = jwt.verify(token, SECRET_JWT_KEY);
+            const misDatos = await this.UserModel.getUsuario({email: data.email});
+            const {id, pass, created_at, ...rest} = misDatos[0]
+            // console.log(rest)
+            res.render('chat/chat', {misDatos: rest});
+        }catch(error){
+            return res.status(401).send('No autorizado')
+        }
+    }
+
+
     // crear usuario
     create = async (req, res) => {
         // validaciones
@@ -43,9 +63,9 @@ export class UserController {
             if(!isValid){
                 return res.status(400).json({ error: 'Contraseña incorrecta' });
             }
-            const {pass, id, created_at, ...rest} = usuario[0];
+            const {pass, id, created_at, nombre, ...rest} = usuario[0];
 
-            const token = jwt.sign({email: usuario[0].email}, SECRET_JWT_KEY, {expiresIn: '1h'});
+            const token = jwt.sign({email: rest.email}, SECRET_JWT_KEY, {expiresIn: '1h'});
 
             const datos = {...rest};
 
@@ -53,7 +73,6 @@ export class UserController {
         }
 
         return res.status(400).json({ error: 'Usuario no encontrado' });
-
     }
 
     // cerrar sesion
@@ -61,16 +80,17 @@ export class UserController {
         borrarCookie(res, 'access_token');
     }
 
-    // añadir amigo
+    // añadir amigo yes
     addFriend = async (req, res) => {
         const {email, amigo, nombre} = req.body;
+        const datos = await this.UserModel.getUsuario({email: email});
         const usuario = await this.UserModel.getUsuario({email: amigo});
 
         if(usuario.length === 0) {
             return res.status(400).json({ error: 'Usuario no encontrado' });
         }
 
-        await this.UserModel.addFriend({email: email, amigo: amigo, nombre: nombre});
+        await this.UserModel.addFriend({email: datos[0].id, amigo: usuario[0].id, nombre: nombre});
         return res.status(200).json({ message: 'Amigo agregado' });
     }
 
@@ -84,18 +104,40 @@ export class UserController {
     
             const data = jwt.verify(token, SECRET_JWT_KEY);
             const email = data.email;
-    
-            const amigos = await this.UserModel.getFriend({ email });
+            const datos = await this.UserModel.getUsuario({email: email});
+    // falta poner el buscar el id del user por el email
+            const amigos = await this.UserModel.getFriend({ id: datos[0].id });
     
             if (amigos.length === 0) {
                 return res.status(400).json({ error: 'No tienes amigos' });
             }
     
-            const amigosSinDatos = amigos.map(({ id, usuario_id, created_at, ...rest }) => rest);
+            const amigosSinDatos = amigos.map(({ id, usuario_id, created_at, amigo_id,  ...rest }) => rest);
             return res.status(200).json(amigosSinDatos);
     
         } catch (error) {
             console.error('Error al obtener amigos:', error);
+            return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+    }
+    // añadir los chats
+    addChats = async (req, res) => {
+        try{
+            const {amigo} = req.body;
+            const token = buscarCookie(req, 'access_token');
+            if (!token) {
+                return res.status(401).json({ error: 'No autorizado' });
+            }
+    
+            const data = jwt.verify(token, SECRET_JWT_KEY);
+            const email = data.email;
+            const datos = await this.UserModel.getUsuario({email: email});
+            const usuario = await this.UserModel.getUsuario({email: amigo});
+
+            await this.UserModel.addList({email: datos[0].id, amigo: usuario[0].id});
+            return res.status(200).json({ message: 'Lista de chat creada' });
+        }catch(error){
+            console.error('Error al crear lista de chat:', error);
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
     }
@@ -110,8 +152,8 @@ export class UserController {
     
             const data = jwt.verify(token, SECRET_JWT_KEY);
             const email = data.email;
-
-            const chats = await this.UserModel.getChats({ email });
+            const datos = await this.UserModel.getUsuario({email: email});
+            const chats = await this.UserModel.getChats({ id: datos[0].id });
 
             if (chats.length === 0) {
                 return res.status(400).json({ error: 'No tienes chats' });

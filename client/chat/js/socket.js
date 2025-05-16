@@ -1,12 +1,19 @@
 import {io} from 'https://cdn.socket.io/4.8.1/socket.io.esm.min.js'
+import {email} from './datosServer.js'
 
 const socket = io({
     auth: {
-        username: userEmail,
-        userFriend: 'sergio@gmail.com',
+        username: email,
+        userFriend: '',
         serverOffset: 0
     }
 })
+
+export function abrirChatCon(amigo){
+    socket.emit('userDestino', {
+        userFriend: amigo,
+    });
+}
 
 const form = document.getElementById('form')
 const input = document.getElementById('input')
@@ -25,6 +32,7 @@ socket.on('chat message', (msg, serverOffset, username, senderId) => {
 form.addEventListener('submit', e => {
     e.preventDefault()
     if (input.value) {
+        console.log(input)
         // Crear y mostrar el mensaje enviado localmente
         const message = document.createElement('div')
         message.classList.add('message', 'sent')
@@ -36,3 +44,5 @@ form.addEventListener('submit', e => {
         input.value = ''
     }
 })
+
+export default socket

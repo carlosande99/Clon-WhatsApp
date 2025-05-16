@@ -5,11 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhatsApp Web Clone</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script>
-        const userEmail = '<%= email %>';
+    <script id="user-data" type="application/json">
+        {
+        "nombre": "<%= misDatos.nombre %>",
+        "email": "<%= misDatos.email %>"
+        }
     </script>
     <script type="module" src="./js/socket.js"></script>
     <script type="module" src="./js/logout.js"></script>
+    <script type="module" src="./js/buttons.js"></script>
     <script type="module" src="./js/newChat.js"></script>
     <link rel="stylesheet" href="./css/chat.css">
     <style type="text/tailwindcss">
@@ -27,13 +31,13 @@
             --color-whatsappTextDark: #E1E1E1;  /* Texto principal (modo oscuro) */
         }
     </style>
-    
 </head>
 <body>
     <!-- grande -->
     <div class="flex max-h-screen flex-col">
         <div class="flex bg-whatsappDark h-[5vh]">
-            <img src="./assets/whatsapp.svg" class="w-6 ml-3 me-3"/>
+            <span class="flex w-6 ml-3 me-3 text-whatsappLight justify-center"><%- include('./assets/whatsapp.svg')%></span>
+            <!-- <img src="./assets/whatsapp.svg" class="w-6 ml-3 me-3"/> -->
             <h1 class="text-sm text-whatsappTextDark content-center">WhatsApp Web Clone</h1>
         </div>
         <div class="flex bg-whatsappDark h-[95vh]">
@@ -48,7 +52,7 @@
                         
                     }) %>
                     <div role="group">
-                        <%- include('./options', {
+                        <%- include('./components/options', {
                             names: ['chat', 'telephone', 'status'],
                             extraClass: 'content-center p-2 flex justify-center',
                             group: true
@@ -58,13 +62,13 @@
                 </div>
                 <div>
                     <div role="group">
-                        <%- include('./options', {
+                        <%- include('./components/options', {
                             names: ['star', 'box'],
                             extraClass: 'content-center p-2 flex justify-center',
                             group: true
                         }) %>
                     </div>
-                    <%- include('./options', {
+                    <%- include('./components/options', {
                         names: ['line', 'settings'],
                         extraClass: 'content-center p-2 flex justify-center',
                         group: false
@@ -82,23 +86,7 @@
                 <!-- peque 1 -->
                 <div class="flex flex-col bg-whatsappBubbleReceivedDark w-1/4 rounded-tl-lg border border-black/20">
                     <div class="flex justify-center items-center gap-2 p-2 mt-1 mb-1 w-full">
-                        <div id="titulo" class="w-3/6">
-                            <h1 class="text-xl text-white">Chats</h1>
-                        </div>
-                        <div id="newChatFilter" class="w-2/6 flex justify-center">
-                            <%- include('./components/button', {
-                                isSvg: true,
-                                icon: 'newChat',
-                                extraClass: 'content-center p-2 flex justify-center',
-                                group: false
-                            }) %>                              
-                            <%- include('./components/button', {
-                                isSvg: true,
-                                icon: 'filtrar',
-                                extraClass: 'content-center p-2 flex justify-center',
-                                group: false
-                            }) %>    
-                        </div>
+                        <%- include('./components/newChat') %>
                     </div>
                     <div class="flex justify-center items-center gap-2">
                         <input type="text" name="buscar" id="buscar" 
@@ -109,51 +97,38 @@
                             placeholder="Buscar un chat o iniciar uno nuevo" 
                         />
                     </div>
-                    <div>
+                    <div id="chats">
                         <!-- aqui se crearian los div  de los chats-->
-                        <%- include('chatList') %>
+                        
                     </div>
                     <div class="mt-auto">
                         <button id="cerrarSesion" type="button" class="bg-red-500 rounded-md hover:bg-indigo-500 ">Cerrar sesión</button>
                     </div>
                 </div>
                 <!-- peque 2 -->
-                <div class="flex w-3/4 flex-col">
+                <div class="hidden flex w-3/4 flex-col" id="divChat">
                     <div class="w-full bg-whatsappBubbleReceivedDark border-t border-b border-black/20 p-4 flex justify-between">
-                        <div>
-                            <h2 class="text-xl text-white">Nombre del chat</h2>
-                        </div>
-                        <div class="flex">
-                            <div class="flex m-0">
-                                <%- include('./components/button', {
-                                    isSvg: true,
-                                    icon: 'video',
-                                    extraClass: 'content-center p-2 flex justify-center bg-whatsappGrayDark/30 rounded-none rounded-l-md border-r border-r-white/5',
-                                    group: false                               
-                                }) %>
-                                <%- include('./components/button', {
-                                    isSvg: true,
-                                    icon: 'telephone',
-                                    extraClass: 'content-center p-2 flex justify-center bg-whatsappGrayDark/30 rounded-none rounded-r-md border-l border-l-white/5',
-                                    group: false                               
-                                }) %>
-                            </div>
-                            <%- include('./components/button', {
-                                isSvg: true,
-                                icon: 'search',
-                                extraClass: 'content-center p-2 flex justify-center scale-x-[-1] ml-1',
-                                group: false                               
-                            }) %>
-                        </div>
-
+                        <%- include('./components/nameChat') %>
                     </div>
                     <div class="flex-1 overflow-y-auto space-y-2 flex flex-col-reverse bg-[url(/img/fondo.webp)]">
-                        <div class="chat-messages flex flex-col space-y-2">
+                        <div class="chat-messages flex flex-col space-y-2" id="chat-messages">
                             <!-- aqui se añaden los mensajes -->
                         </div>
                     </div>
                     <div class="w-full bg-whatsappBubbleReceivedDark">
                         <%- include('./components/teclado') %>
+                    </div>
+                </div>
+                <div class="flex w-3/4 flex-col bg-whatsappBubbleReceivedDark items-center justify-center text-white" id="noChat">
+                    <div class="text-whatsappGrayDark w-20 mb-4">
+                        <%- include('./assets/whatsapp.svg')  %>
+                    </div>
+                    <div class="w-full text-center">
+                        <h2>WhatsApp para Web</h2>
+                    </div>   
+                    <div class="w-full text-center text-whatsappTextDark/50">
+                        <p>Envía y recibe mensajes sin mantener tu teléfono conectado.</p>
+                        <p>Usa WhatsApp en hasta 4 dispositivos vinculados y 1 teléfono a la vez</p>
                     </div>
                 </div>
             </div>

@@ -2,8 +2,8 @@ post http://localhost:3000/registro
 Content-Type: application/json
 
 {
-  "nombre": "carlos",
-  "email": "carlos@gmail.com",
+  "nombre": "pepe",
+  "email": "pepe@gmail.com",
   "password": "123456"
 }
 ###
@@ -53,3 +53,14 @@ Content-Type: application/json
 {
   "email": "carlos@gmail.com"
 }
+
+###
+post http://localhost:3000/chats
+Content-Type: application/json
+
+{
+  "amigo": "sergio@gmail.com"
+}
+
+###
+get http://localhost:3000/chats

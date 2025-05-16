@@ -1,0 +1,84 @@
+<div id="titulo" class="w-3/6">
+    <h1 class="text-xl text-white">Chats</h1>
+</div>
+<div id="newChatFilter" class="w-2/6 flex justify-center relative">
+    <%- include('./button', {
+        isSvg: true,
+        icon: 'newChat',
+        extraClass: 'content-center p-2 flex justify-center',
+        group: false
+    }) %>                            
+    <%- include('./button', {
+        isSvg: true,
+        icon: 'filtrar',
+        extraClass: 'content-center p-2 flex justify-center',
+        group: false
+    }) %>
+
+    <!-- modal del boton --> 
+    <div id="modal" class="absolute w-full hidden z-20 overflow-visible mt-[46px] text-white bg-whatsappBubbleReceivedDark">
+        <div class="absolute left-0 w-[300px] bg-whatsappBubbleReceivedDark rounded shadow-lg p-4" id="modalContent">
+            <h2 class="text-xl font-semibold mb-4 p-2">Nuevo Chat</h2>
+            <form action="" class="p-1">
+                <input type="text" placeholder="Buscar un nombre o email"
+                class="focus:outline-none focus:border-transparent text-white rounded-md bg-whatsappGrayDark
+                border border-t-whatsappBubbleReceivedDark border-e-whatsappBubbleReceivedDark border-l-whatsappBubbleReceivedDark border-b-whatsappGray
+                focus:bg-whatsappDark focus:border-b-whatsappLight w-full p-1">
+            </form>
+            <%- include('./button', {
+                isSvg: true,
+                icon: 'users',
+                extraClass: 'w-full p-2',
+                group: false
+            }) %>
+            <%- include('./button', {
+                isSvg: true,
+                icon: 'user',
+                extraClass: 'w-full p-2',
+                group: false
+            }) %>
+            <span>Todos los contactos</span>
+            <div id="contactos">
+                <!-- aqui se añaden los amigos -->
+            </div>
+            <button id="closeModal" class="bg-red-500 px-4 py-2 rounded w-full flex justify-start">Cerrar</button>
+        </div>
+        
+    </div> 
+</div>
+
+<script type="module">
+    import { abrirChatCon } from '../js/socket.js';
+document.addEventListener('DOMContentLoaded', () => {
+//   const chats = document.getElementById('chats');
+  const modalContent = document.getElementById('modalContent');
+  const chat = document.getElementById('divChat');
+  const nochat = document.getElementById('noChat');
+  const tituloChat = document.getElementById('tituloChat');
+  const mensajes = document.getElementById('chat-messages');
+  modalContent.addEventListener('click', (e) => {
+    const contacto = e.target.closest('.contactos');
+    if (contacto) {
+      chat.classList.remove('hidden');
+      nochat.classList.add('hidden');
+    //   cambia el titulo del chat
+      tituloChat.innerText = contacto.innerText;
+      mensajes.innerHTML = '';
+      abrirChatCon(contacto.dataset.email);
+    //   faltaria hacer una conexion al socket 1 a 1
+
+    //   const nombre = contacto.innerText;
+    //   const button = document.createElement('button');
+    //   button.classList.add(
+    //     'bg-whatsappGrayDark', 'rounded-md', 'hover:bg-whatsappLight',
+    //     'w-full', 'flex', 'justify-start', 'p-2', 'text-white'
+    //   );
+    //   button.innerText = nombre;
+    //   chats.appendChild(button);
+    }
+  });
+});
+
+</script>
+
+

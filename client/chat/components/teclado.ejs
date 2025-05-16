@@ -23,7 +23,7 @@
         group: false
     }) %> 
 </form>
-
+<!-- script al escribir -->
 <script type="module">
     const textarea = document.getElementById('input');
     
@@ -31,31 +31,35 @@
         textarea.style.height = 'auto';
         textarea.style.height = `${textarea.scrollHeight}px`;
         if(textarea.value.trim() !== ''){
+            console.log('no esta vacio');
             const img = document.getElementById('microphone');
             if(img !== null){
-                img.setAttribute('href', './assets/sprite.svg#enviar');
+                img.firstElementChild.firstElementChild.setAttribute('href', './assets/sprite.svg#enviar');
                 img.setAttribute('id', 'enviar');
-                img.parentElement.parentElement.setAttribute('type', 'submit');
+                img.setAttribute('type', 'submit');
             }
         }else{
+            console.log('esta vacio');
             const img = document.getElementById('enviar');
             if(img !== null){
-                img.setAttribute('href', './assets/sprite.svg#microphone');
+                img.firstElementChild.firstElementChild.setAttribute('href', './assets/sprite.svg#microphone');
                 img.setAttribute('id', 'microphone');
-                img.parentElement.parentElement.setAttribute('type', 'button');
-            }         
+                img.setAttribute('type', 'button');
+            }      
         }
     });
 </script>
-
+<!-- script al enviar -->
 <script type="module">
-    const form = document.getElementById('form');
     const input = document.getElementById('input');
     input.addEventListener('keydown', function(event) {
         if (event.key === 'Enter' && !event.shiftKey) {
             event.preventDefault();
             const enviar = document.getElementById('enviar');
+            enviar.firstElementChild.firstElementChild.setAttribute('href', './assets/sprite.svg#microphone');
+            enviar.setAttribute('id', 'microphone');
+            enviar.setAttribute('type', 'button');
             form.dispatchEvent(new Event('submit', { cancelable: true }));
         }
-    });
+    });  
 </script>
