@@ -84,11 +84,11 @@
             <!-- segunda -->
             <div class="flex w-full">
                 <!-- peque 1 -->
-                <div class="flex flex-col bg-whatsappBubbleReceivedDark w-1/4 rounded-tl-lg border border-black/20">
+                <div class="flex flex-col bg-whatsappGrayDark/60 w-1/4 rounded-tl-lg border border-black/20">
                     <div class="flex justify-center items-center gap-2 p-2 mt-1 mb-1 w-full">
                         <%- include('./components/newChat') %>
                     </div>
-                    <div class="flex justify-center items-center gap-2">
+                    <div class="flex justify-center items-center gap-2 mb-4">
                         <input type="text" name="buscar" id="buscar" 
                             class="focus:outline-none focus:border-transparent text-white w-5/6 rounded-md bg-whatsappGrayDark
                             border border-t-whatsappBubbleReceivedDark border-e-whatsappBubbleReceivedDark border-l-whatsappBubbleReceivedDark border-b-whatsappGray
@@ -97,9 +97,8 @@
                             placeholder="Buscar un chat o iniciar uno nuevo" 
                         />
                     </div>
-                    <div id="chats">
-                        <!-- aqui se crearian los div  de los chats-->
-                        
+                    <div id="chats" class="flex flex-col justify-center items-center">
+                        <%- include('./components/chatList') %>                  
                     </div>
                     <div class="mt-auto">
                         <button id="cerrarSesion" type="button" class="bg-red-500 rounded-md hover:bg-indigo-500 ">Cerrar sesión</button>
@@ -119,7 +118,8 @@
                         <%- include('./components/teclado') %>
                     </div>
                 </div>
-                <div class="flex w-3/4 flex-col bg-whatsappBubbleReceivedDark items-center justify-center text-white" id="noChat">
+                <!-- pantalla de inicio -->
+                <div class="flex w-3/4 flex-col bg-whatsappGrayDark/60 items-center justify-center text-white" id="noChat">
                     <div class="text-whatsappGrayDark w-20 mb-4">
                         <%- include('./assets/whatsapp.svg')  %>
                     </div>

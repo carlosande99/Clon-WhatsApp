@@ -2,8 +2,8 @@ post http://localhost:3000/registro
 Content-Type: application/json
 
 {
-  "nombre": "pepe",
-  "email": "pepe@gmail.com",
+  "nombre": "carlos",
+  "email": "carlos@gmail.com",
   "password": "123456"
 }
 ###
@@ -42,8 +42,8 @@ Content-Type: application/json
 
 {
   "email": "carlos@gmail.com",
-  "amigo": "pablo@gmail.com",
-  "nombre": "pablo"
+  "amigo": "sergio@gmail.com",
+  "nombre": "sergio"
 }
 
 ###

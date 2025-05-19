@@ -12,7 +12,7 @@ const connection = mysql.createPool(config)
 
 // modelo de usuario
 export class UserModel {
-    // buscar usuario por el correo
+    // buscar usuario por el correo o id
     static async getUsuario({email}) {
         const [usuario] = await connection.query(
             'SELECT * FROM usuarios where email = ?',
@@ -38,7 +38,7 @@ export class UserModel {
         return usuario
     }
 
-    // guardar amigo yes
+    // guardar amigo
     static async addFriend({email, amigo, nombre}) {
         const [usuario] = await connection.query(
             'INSERT INTO amigos (usuario_id, amigo_id, nombre) VALUES (?,?,?)',
@@ -46,7 +46,6 @@ export class UserModel {
         )
         return usuario
     }
-
     // devolver lista de amigos
     static async getFriend({id}) {
         const [rows] = await connection.query(
@@ -55,27 +54,29 @@ export class UserModel {
         )
         return rows
     }
-
-    // creacion de lista del chat para los dos yes
-    static async addList({email, amigo}) {
-        await connection.query(
-            'INSERT INTO chat_list (usuario_id, amigo_id) VALUES (?,?)',
-            [email, amigo]
+    // devolver nombre del amigo
+    static async getFriendName ({id, amigo_id}) {
+        const [rows] = await connection.query(
+            'SELECT nombre FROM amigos WHERE usuario_id =? AND amigo_id =?',
+            [id, amigo_id]
         )
-
+        return rows
+    }
+    // creacion de lista del chat para los dos usuarios solo cuando sea el primer mensaje
+    static async addList({id, amigo_id}) {
         await connection.query(
-            'INSERT INTO chat_list (usuario_id, amigo_id) VALUES (?,?)',
-            [amigo, email]
+            'INSERT INTO chat_list (user1, user2) VALUES (?,?)',
+            [id, amigo_id]
         )
         return
     }
-    // devolver lista de chats
-    static async getChats({id}) {
+    // devolver id del chat
+    static async getChat({id, amigo_id}) {
         const [rows] = await connection.query(
-            'SELECT * FROM chat_list WHERE usuario_id = ?',
-            [id]
-        )
-        return rows
+            'SELECT id FROM chat_list WHERE (user1 = ? AND user2 = ?) OR (user1 = ? AND user2 = ?)',
+            [id, amigo_id, amigo_id, id]
+        );
+        return rows;
     }
     // buscar usuario por id y devolver su email
     static async getUsuarioId({id}) {
@@ -85,25 +86,42 @@ export class UserModel {
         )
         return usuario
     }
+    // devolver todos lo chats
+    static async getAllChats ({id}) {
+        const [rows] = await connection.query(
+            'SELECT * FROM chat_list WHERE user1 =? OR user2 =?',
+            [id, id]
+        )
+        return rows
+    }
+    // devolver el ultimo mensaje de cada chat
+    static async getLastMessage ({id}) {
+        const [rows] = await connection.query(
+            'SELECT content FROM mensaje WHERE id =?',
+            [id]
+        )
+        return rows
+    }
 }
 // modelo del socket
 export class MessageModel {
-    static async postMessage({content, id, friendId}) {
-        const [message] = await connection.query(
-            'INSERT INTO mensaje (content, usuario_id, amigo_id) VALUES (?,?,?)',
-            [content, id, friendId]
+    // guardar mensaje
+    static async postMessage({content, id, friendId, chatId}) {
+        await connection.query(
+            'INSERT INTO mensaje (content, usuario_id, amigo_id, chat_id) VALUES (?,?,?,?)',
+            [content, id, friendId, chatId]
         )
-        return message
+        return
     }
-
-    static async getMessages({offset}) {
+    // recuperar mensajes
+    static async getMessages({chat_id}) {
         const [rows] = await connection.execute(
-            'SELECT id, content, user FROM mensaje WHERE id > ?',
-            [offset]
+            'SELECT * FROM mensaje WHERE chat_id = ?',
+            [chat_id]
         );
         return rows
     }
-
+    // sacar datos del usuario por el correo
     static async getMyId ({email}) {
         const [rows] = await connection.query(
             'SELECT id FROM usuarios WHERE email = ?',
@@ -111,7 +129,7 @@ export class MessageModel {
         )
         return rows
     }
-
+    // sacar id y de los amigos
     static async getFriendId ({id, amigoName}) {
         const [rows] = await connection.query(
             'SELECT amigo_id FROM amigos WHERE usuario_id = ? AND nombre = ?',
@@ -119,5 +137,20 @@ export class MessageModel {
         )
         return rows
     }
-
+    // actualizar el chat con el ultimo mensaje
+    static async updateChat ({chatId, lastMessage_id}) {
+        await connection.query(
+            'UPDATE chat_list SET last_message_id =? WHERE id =?',
+            [lastMessage_id, chatId]
+        )
+        return
+    }
+    // devolver el id del ultimo mensaje
+    static async getLastMessageId ({chatId}) {
+        const [rows] = await connection.query(
+            'SELECT id FROM mensaje WHERE chat_id =? ORDER BY created_at DESC LIMIT 1',
+            [chatId]
+        )
+        return rows
+    }
 }

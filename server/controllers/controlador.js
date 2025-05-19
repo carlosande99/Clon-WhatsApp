@@ -18,11 +18,13 @@ export class UserController {
             // cosas que tengo que devolver -> mis datos como el gmail y nombre como de mis amigos
             const data = jwt.verify(token, SECRET_JWT_KEY);
             const misDatos = await this.UserModel.getUsuario({email: data.email});
+            console.log(misDatos[0].id)
+            // console.log(misChats)
             const {id, pass, created_at, ...rest} = misDatos[0]
             // console.log(rest)
             res.render('chat/chat', {misDatos: rest});
         }catch(error){
-            return res.status(401).send('No autorizado')
+            return res.status(401).send('Error al renderizar la pagina de chat')
         }
     }
 
@@ -80,7 +82,7 @@ export class UserController {
         borrarCookie(res, 'access_token');
     }
 
-    // añadir amigo yes
+    // añadir amigo
     addFriend = async (req, res) => {
         const {email, amigo, nombre} = req.body;
         const datos = await this.UserModel.getUsuario({email: email});
@@ -153,14 +155,21 @@ export class UserController {
             const data = jwt.verify(token, SECRET_JWT_KEY);
             const email = data.email;
             const datos = await this.UserModel.getUsuario({email: email});
-            const chats = await this.UserModel.getChats({ id: datos[0].id });
-
+            const chats = await this.UserModel.getAllChats({ id: datos[0].id });
             if (chats.length === 0) {
                 return res.status(400).json({ error: 'No tienes chats' });
             }
-
-            const chatsSinDatos = chats.map(({ id, usuario_id, last_message_at, ...rest }) => rest);
-            return res.status(200).json(chatsSinDatos);
+            const chatsConDatos = []
+            for (const element of chats) {
+                const amigoId = Buffer.compare(element.user1, datos[0].id) === 0 ? element.user2 : element.user1;
+                const friendName = await this.UserModel.getFriendName({id: datos[0].id, amigo_id: amigoId});
+                const ultimoMensaje = await this.UserModel.getLastMessage({id: element.last_message_id});
+                chatsConDatos.push({
+                    nombre: friendName[0].nombre,
+                    mensaje: ultimoMensaje[0].content,
+                })
+            }
+            return res.status(200).json(chatsConDatos);
         }catch(error){
             console.error('Error al obtener chats:', error);
             return res.status(500).json({ error: 'Error interno del servidor' });
