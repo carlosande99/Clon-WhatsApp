@@ -9,7 +9,7 @@ import {createRoutes} from './routes/routes.js'
 import setupSocketIO from './routes/socket.js'
 import { PORT } from './config.js'
 
-import { UserModel } from './models/mysql.js'
+import { UserModel, MessageModel } from './models/mysql.js'
 
 const app = express();
 const ServerIO = createServer(app);
@@ -26,7 +26,7 @@ app.set('views', path.join(process.cwd(), '../client'));
 app.use(express.json());
 app.use(cookieParser());
 
-app.use('/', createRoutes({UserModel}))
+app.use('/', createRoutes({UserModel, MessageModel}))
 
 
 ServerIO.listen(PORT, () => {

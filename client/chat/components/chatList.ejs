@@ -1,4 +1,6 @@
 <script type="module">
+    import { abrirChatCon } from '../js/socket.js';
+    import { getMenssages }  from '../js/menssages.js';
     document.addEventListener('DOMContentLoaded', () => {
         fetch('/chats', {
             method: 'GET',
@@ -14,13 +16,13 @@
             data.forEach(element => {
                 const div = document.createElement('div');
                 div.classList.add(
-                'text-start', 'p-4', 'w-9/10', 'text-white', 'hover:bg-whatsappGrayDark/70', 'rounded-md', 'mb-1'
+                'text-start', 'p-4', 'w-9/10', 'text-white', 'hover:bg-whatsappGrayDark/70', 'rounded-md', 'mb-1', 'amigos'
                 );
+                div.id = element.nombre;
                 const amigo = document.createElement('button');
                 amigo.classList.add(
                 'btn' , 'text-start', 'w-full'
                 );
-                amigo.id = element.nombre;
                 amigo.innerText = element.nombre;
                 div.appendChild(amigo);
                 chats.appendChild(div);
@@ -29,5 +31,28 @@
         .catch(error => {
             console.error('Hubo un problema con la solicitud Fetch:', error);
         });
-    }) 
+
+        const chat = document.getElementById('divChat');
+        const nochat = document.getElementById('noChat');
+        const tituloChat = document.getElementById('tituloChat');
+        const chats = document.getElementById('chats');
+        const mensajes = document.getElementById('chat-messages');
+        console.log('hola');
+        chats.addEventListener('click', (e) => {
+            console.log('click');
+            const amigo = e.target.closest('.amigos');
+            if (amigo) {
+                const nombre = amigo.id;
+                console.log(nombre);
+                chat.classList.remove('hidden');
+                nochat.classList.add('hidden');
+                // cambia el titulo del chat
+                tituloChat.innerText = nombre;
+                // vacia el chat
+                mensajes.innerHTML = '';
+                abrirChatCon(nombre);
+                getMenssages(nombre);
+            }
+        });
+    })
 </script>

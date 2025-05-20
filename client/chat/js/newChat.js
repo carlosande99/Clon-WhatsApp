@@ -13,7 +13,6 @@ newChat.addEventListener('click', () => {
         return res.json();
     })
     .then(data => {
-        console.log(data)
         const contactos = document.getElementById('contactos');
         const usuarios = document.querySelectorAll('.contactos');
         usuarios.forEach(usuario => {

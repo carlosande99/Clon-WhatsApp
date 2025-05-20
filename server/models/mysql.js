@@ -102,6 +102,14 @@ export class UserModel {
         )
         return rows
     }
+    // devolver el id del amigo
+    static async getFriendId ({id, amigoName}) {
+        const [rows] = await connection.query(
+            'SELECT amigo_id FROM amigos WHERE usuario_id = ? AND nombre = ?',
+            [id, amigoName]
+        )
+        return rows
+    }
 }
 // modelo del socket
 export class MessageModel {

@@ -1,10 +1,10 @@
 import { Router } from 'express'
 import { UserController } from '../controllers/controlador.js'
 
-export const createRoutes = ({ UserModel }) => {
+export const createRoutes = ({ UserModel,  MessageModel}) => {
     const rutas = Router()
     // Crear una instancia del controlador
-    const userController = new UserController({ UserModel })
+    const userController = new UserController({ UserModel, MessageModel })
 
     rutas.get('/', userController.pageChat);
 
@@ -34,6 +34,9 @@ export const createRoutes = ({ UserModel }) => {
     
     // cerrar sesion
     rutas.post('/logout', userController.logout);
+
+    // devolver mensajes
+    rutas.post('/mensages', userController.getMenssages);
 
     return rutas;
 }

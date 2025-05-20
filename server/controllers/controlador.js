@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken'
 import { SECRET_JWT_KEY } from "../config.js";
 import { borrarCookie, setCookie, buscarCookie } from "../utils/cookieUtils.js";
 export class UserController {
-    constructor({UserModel}) {
+    constructor({UserModel, MessageModel}) {
         this.UserModel = UserModel;
+        this.MessageModel = MessageModel;
     }
 
     // render de la pagina
@@ -18,7 +19,7 @@ export class UserController {
             // cosas que tengo que devolver -> mis datos como el gmail y nombre como de mis amigos
             const data = jwt.verify(token, SECRET_JWT_KEY);
             const misDatos = await this.UserModel.getUsuario({email: data.email});
-            console.log(misDatos[0].id)
+            // console.log(misDatos[0].id)
             // console.log(misChats)
             const {id, pass, created_at, ...rest} = misDatos[0]
             // console.log(rest)
@@ -27,7 +28,6 @@ export class UserController {
             return res.status(401).send('Error al renderizar la pagina de chat')
         }
     }
-
 
     // crear usuario
     create = async (req, res) => {
@@ -107,7 +107,7 @@ export class UserController {
             const data = jwt.verify(token, SECRET_JWT_KEY);
             const email = data.email;
             const datos = await this.UserModel.getUsuario({email: email});
-    // falta poner el buscar el id del user por el email
+            // falta poner el buscar el id del user por el email
             const amigos = await this.UserModel.getFriend({ id: datos[0].id });
     
             if (amigos.length === 0) {
@@ -172,6 +172,27 @@ export class UserController {
             return res.status(200).json(chatsConDatos);
         }catch(error){
             console.error('Error al obtener chats:', error);
+            return res.status(500).json({ error: 'Error interno del servidor' });
+        }
+    }
+
+    getMenssages = async (req, res) => {
+        try{
+            const {amigo} = req.body;
+            const token = buscarCookie(req, 'access_token');
+            if (!token) {
+                return res.status(401).json({ error: 'No autorizado' });
+            }
+            const data = jwt.verify(token, SECRET_JWT_KEY);
+            const email = data.email;
+            const datos = await this.UserModel.getUsuario({email: email});
+            const idFriend = await this.UserModel.getFriendId({id: datos[0].id, amigoName: amigo});
+            const idChat = await this.UserModel.getChat({id: datos[0].id, amigo_id: idFriend[0].amigo_id});
+            console.log(idChat[0].id)
+            const mensajes = await this.MessageModel.getMessages({chat_id: idChat[0].id});
+            return res.status(200).json(mensajes);
+        }catch(error){
+            console.error('Error al crear lista de chat:', error);
             return res.status(500).json({ error: 'Error interno del servidor' });
         }
     }
